@@ -1,0 +1,127 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>lab.kevin</groupId>
+    <artifactId>db-connection-layer</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>moon</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.jooq.version>3.10.6</org.jooq.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${org.jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>${org.jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>${org.jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <maxmem>1024m</maxmem>
+                    <meminitial>256m</meminitial>
+                    <encoding>UTF-8</encoding>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <debug>true</debug>
+                    <debuglevel>lines,vars,source</debuglevel>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.10.6</version>
+
+                <!-- The plugin should hook into the generate goal -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <!-- Specify the plugin configuration.
+                     The configuration format is the same as for the standalone code generator -->
+                <configuration>
+                    <!-- JDBC connection parameters -->
+                    <jdbc>
+                        <driver>org.hsqldb.jdbcDriver</driver>
+                        <url>jdbc:hsqldb:hsql://localhost:9090/mydb</url>
+                        <user>SA</user>
+                        <password></password>
+                    </jdbc>
+
+                    <!-- Generator parameters -->
+                    <generator>
+                        <name>org.jooq.util.JavaGenerator</name>
+                        <database>
+                            <name>org.jooq.util.hsqldb.HSQLDBDatabase</name>
+                            <includes>.*</includes>
+                            <excludes></excludes>
+                            <inputSchema>PUBLIC</inputSchema>
+                        </database>
+                        <generate>
+                            <deprecated>false</deprecated>
+                            <daos>false</daos>
+                        </generate>
+                        <target>
+                            <packageName>lab.kevin.db</packageName>
+                            <directory>src/main/java</directory>
+                        </target>
+                    </generator>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hsqldb</groupId>
+                        <artifactId>hsqldb</artifactId>
+                        <version>2.4.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>
